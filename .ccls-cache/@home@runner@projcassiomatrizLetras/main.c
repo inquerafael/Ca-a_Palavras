@@ -23,44 +23,50 @@ void preencherMatriz(CelulaM matriz[tamanho][tamanho]) {
 }
 
 int podeInserir(CelulaM matriz[tamanho][tamanho], char *palavra, int linha,
-                int coluna, int direcao,
-                int *possivel) { // verifica se cabe a palavra e se a palavra ja
-                                 // foi inserida
-  int len = strlen(palavra);     // tamanho da palavra
+                int coluna,
+                int direcao) { // verifica se cabe a palavra e se a palavra ja
+                               // foi inserida
+  int len = strlen(palavra);   // tamanho da palavra
 
-  if (direcao == 0 && tamanho < len) { // Horizontal
-    if (coluna + len > tamanho)
+  if (direcao == 0) { // Horizontal
+    if (coluna + len > tamanho) {
       return 0;
+    }
+
     for (int i = 0; i < len; i++) {
       // verifica se a letra é igual para nao modificar a palavra q ja usa a
       // celula
       if (matriz[linha][coluna + i].parteDePalavra == 1 &&
-          matriz[linha][coluna + i].letra != palavra[i])
+          matriz[linha][coluna + i].letra != palavra[i]) {
         // se a celula for diferente da celula(palavra q usa o espaço), retorna
         // 0
         return 0;
+      }
     }
-  } else if (direcao == 1 && tamanho < len) { // Vertical
-    if (linha + len > tamanho)
+  } else if (direcao == 1) { // Vertical
+    if (linha + len > tamanho) {
       return 0;
+    }
 
     for (int i = 0; i < len; i++) {
       if (matriz[linha][coluna + i].parteDePalavra == 1 &&
-          matriz[linha][coluna + i].letra != palavra[i])
+          matriz[linha][coluna + i].letra != palavra[i]) {
         return 0;
+      }
     }
-  } else if (direcao == 2 && tamanho < len) { // Diagonal
-    if (linha + len > tamanho || coluna + len > tamanho)
+  } else if (direcao == 2) { // Diagonal
+    if (linha + len > tamanho || coluna + len > tamanho) {
       return 0;
+    }
     for (int i = 0; i < len; i++) {
       if (matriz[linha][coluna + i].parteDePalavra == 1 &&
-          matriz[linha][coluna + i].letra != palavra[i])
+          matriz[linha][coluna + i].letra != palavra[i]) {
         return 0;
+      }
     }
   } else {
     printf("Direção inválida.\n");
-    *possivel = 0;
-    return *possivel;
+    return 0;
   }
   return 1;
 }
@@ -68,14 +74,13 @@ int podeInserir(CelulaM matriz[tamanho][tamanho], char *palavra, int linha,
 void inserirPalavra(CelulaM matriz[tamanho][tamanho], char *palavra) {
   int comprimento = strlen(palavra); // retotna um inteiro (tam. palavra)
   int linha, coluna, direcao;        // variaveis para a direcao
-  int possivel = 1;
+
   do {
     linha = rand() % tamanho;  // sorteia uma linha
     coluna = rand() % tamanho; // sorteia uma coluna
     direcao = rand() % 3;      // 0: Horizontal, 1: Vertical, 2: Diagonal
-  } while (!podeInserir(matriz, palavra, linha, coluna, direcao,
-                        &possivel) &&
-           possivel == 1); // se a palavra nao cabe, sorteia novamente
+  } while (!podeInserir(matriz, palavra, linha, coluna,
+                        direcao)); // se a palavra nao cabe, sorteia novamente
 
   for (int i = 0; i < comprimento; i++) {
     if (direcao == 0) {
@@ -89,9 +94,6 @@ void inserirPalavra(CelulaM matriz[tamanho][tamanho], char *palavra) {
     } else if (direcao == 2) { // o mesmo
       matriz[linha + i][coluna + i].letra = palavra[i];
       matriz[linha + i][coluna + i].parteDePalavra = 1;
-    } else {
-      printf("Nao foi possivel inserir a palavra");
-      break;
     }
   }
 }
@@ -108,9 +110,18 @@ void imprimirMatriz(CelulaM matriz[tamanho][tamanho]) {
 
 void escolhaPalavra(CelulaM matriz[tamanho][tamanho], char *palavras) {
   char resposta;
+  int comprimento = 0;
 
-  printf("\t• Digite a palavra: ");
-  scanf("%s", palavras);
+  do {
+    printf("\t• Digite a palavra: ");
+    scanf("%s", palavras);
+    comprimento = strlen(palavras);
+
+    if (comprimento > tamanho) {
+      printf("Erro: A palavra é maior que o tamanho da matriz. Tente "
+             "novamente.\n");
+    }
+  } while (comprimento > tamanho);
   inserirPalavra(matriz, palavras);
 
   printf("\t• Nova Palavra? (s/n): ");
