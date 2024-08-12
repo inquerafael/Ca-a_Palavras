@@ -22,11 +22,11 @@ void preencherMatriz(CelulaM matriz[tamanho][tamanho]) {
   }
 }
 
-int podeInserir(
-    CelulaM matriz[tamanho][tamanho], char *palavra, int linha, int coluna,
-    int direcao,
-    int possivel) { // verifica se cabe a palavra e se a palavra ja foi inserida
-  int len = strlen(palavra); // tamanho da palavra
+int podeInserir(CelulaM matriz[tamanho][tamanho], char *palavra, int linha,
+                int coluna, int direcao,
+                int *possivel) { // verifica se cabe a palavra e se a palavra ja
+                                 // foi inserida
+  int len = strlen(palavra);     // tamanho da palavra
 
   if (direcao == 0 && tamanho < len) { // Horizontal
     if (coluna + len > tamanho)
@@ -59,8 +59,8 @@ int podeInserir(
     }
   } else {
     printf("Direção inválida.\n");
-    possivel = 0;
-    return possivel;
+    *possivel = 0;
+    return *possivel;
   }
   return 1;
 }
@@ -74,7 +74,7 @@ void inserirPalavra(CelulaM matriz[tamanho][tamanho], char *palavra) {
     coluna = rand() % tamanho; // sorteia uma coluna
     direcao = rand() % 3;      // 0: Horizontal, 1: Vertical, 2: Diagonal
   } while (!podeInserir(matriz, palavra, linha, coluna, direcao,
-                        possivel) &&
+                        &possivel) &&
            possivel == 1); // se a palavra nao cabe, sorteia novamente
 
   for (int i = 0; i < comprimento; i++) {
