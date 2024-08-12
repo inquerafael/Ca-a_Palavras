@@ -7,7 +7,7 @@
 
 typedef struct {
   char letra;
-  int parteDePalavra; // 0 - não, 1 - sim
+  int parteDePalavra; // flag: 0 - não, 1 - sim
 } CelulaM;
 
 void preencherMatriz(CelulaM matriz[tamanho][tamanho]) {
